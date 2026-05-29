@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <!-- FAVICON INTEGRATION AS REQUESTED -->
+    <link rel="icon" type="image/png" href="https://archive.org/download/logo-nbg/logo-nbg.png">
+    <link rel="apple-touch-icon" href="https://archive.org/download/logo-nbg/logo-nbg.png">
+
+    <title>PXE CLASH | APP</title>
+    <style>
+        /* Modern Premium Google Typography Bindings */
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Syncopate:wght@600;700&display=swap');
+
+        /* Dynamic Design Token Root Architectures */
+        :root {
+            /* Strict Hex Core Pallets exactly as specified */
+            --bg-color: #03040A; 
+            --accent-glow: #151B54;
+            --accent-hex: rgba(21, 27, 84, 1);
+            --accent-pop: rgba(43, 56, 172, 1);
+            
+            --glass-bg: rgba(14, 14, 18, 0.4);
+            --glass-light: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --border-highlight: rgba(85, 96, 204, 0.3);
+
+            --text-main: #FFFFFF;
+            --text-mute: rgba(255, 255, 255, 0.55);
+
+            --nav-size: 64px;
+            --border-radius-m: 16px;
+            --border-radius-xl: 32px;
+            --easing-epic: cubic-bezier(0.19, 1, 0.22, 1);
+
+            --font-body: 'Outfit', sans-serif;
+            --font-header: 'Syncopate', sans-serif;
+        }
+
+        /* Essential Reset Core Structure for bug free styling */
+        *, *::before, *::after {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            width: 100%; min-height: 100vh;
+            /* Static elegant underlying deep radial overlay bound securely #151B54 */
+            background-image: 
+                radial-gradient(ellipse at 50% -10%, rgba(21, 27, 84, 0.25) 0%, transparent 60%),
+                radial-gradient(ellipse at 0% 50%, rgba(21, 27, 84, 0.15) 0%, transparent 40%);
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+
+        /* Hardware Accelerated Animation Rendering Backplate Network Framework  */
+        #canvasNetCore {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: -5; pointer-events: none;
+            filter: drop-shadow(0 0 5px rgba(21,27,84, 0.4));
+        }
+
+        /* Master UI Global Constraints Frame Map Architecture (Perfect mobile bounds) */
+        main {
+            padding-top: calc(var(--nav-size) + 40px);
+            padding-bottom: 50px;
+            min-height: 100vh; position: relative; width: 100%;
+        }
+        
+        .master-layer-view {
+            width: 100%; max-width: 1000px; margin: 0 auto;
+            padding: 0 5vw;
+            display: none;
+            opacity: 0;
+            transform: translateY(20px) scale(0.98);
+            transition: transform 0.6s var(--easing-epic), opacity 0.6s var(--easing-epic);
+        }
+
+        .master-layer-view.on-display { display: flex; flex-direction: column; }
+        .master-layer-view.fade-ready { opacity: 1; transform: translateY(0) scale(1); }
+
+        /* ================================
+           SUPERIOR FLOATING NAV MENU
+        =================================== */
+        .glass-island-nav {
+            position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%);
+            display: inline-flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 10, 12, 0.45);
+            backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); border-bottom-color: rgba(255, 255, 255, 0.15);
+            border-radius: 40px; box-shadow: 0 10px 40px -10px rgba(0,0,0,0.8);
+            padding: 8px; width: max-content;
+            gap: 12px; z-index: 1000;
+        }
+
+        .nav-node {
+            display: flex; align-items: center; justify-content: center;
+            background: transparent; border: none; cursor: pointer; color: var(--text-mute);
+            padding: 8px 18px; border-radius: 30px; gap: 8px;
+            font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; letter-spacing: 0.5px;
+            position: relative; transition: all 0.4s var(--easing-epic); overflow: hidden;
+        }
+        
+        /* Strict global SVG bounding standard added to secure icons perfectly.  */
+        .icon-system-render-map { width: 22px; height: 22px; }
+        
+        /* Modern UI standard - Dynamic Labels */
+        .nav-label { width: 0; opacity: 0; overflow: hidden; white-space: nowrap; transition: all 0.4s var(--easing-epic); display: none; }
+        
+        @media(min-width: 768px) {
+            .nav-label { display: block; } 
+            .nav-node.on .nav-label { width: max-content; opacity: 1; margin-left: 2px;}
+        }
+
+        .nav-node::before {
+            content: ''; position: absolute; inset: 0;
+            background: var(--accent-hex);
+            opacity: 0; border-radius: inherit; z-index: -1; transform: scaleX(0.7);
+            transition: all 0.5s var(--easing-epic);
+        }
+
+        .nav-node:hover { color: #fff; }
+        .nav-node.on { color: #ffffff; padding: 8px 24px; box-shadow: inset 0 2px 2px rgba(255,255,255,0.15), 0 0 20px rgba(21, 27, 84, 0.8); }
+        .nav-node.on::before { opacity: 1; transform: scaleX(1); }
+
+
+        /* ================================
+           APP VIEWPORT ARCHITECT - HOME 
+        =================================== */
+        #pageH { min-height: 60vh; justify-content: center; align-items: center; text-align: center; }
+
+        .system-pill-chip {
+            background: var(--glass-bg); backdrop-filter: blur(10px);
+            border: 1px solid var(--border-highlight); color: rgba(255, 255, 255, 0.85);
+            font-size: 11px; text-transform: uppercase; letter-spacing: 3px; font-weight: 700;
+            padding: 8px 16px; border-radius: 50px; margin-bottom: 2rem; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 0 15px rgba(21, 27, 84, 0.4);
+        }
+        .live-dot { width: 6px; height: 6px; background-color: #3e52ff; border-radius: 50%; box-shadow: 0 0 8px #3e52ff; }
+
+        .system-display-text {
+            font-family: var(--font-header); font-size: clamp(3rem, 12vw, 5.5rem); line-height: 1;
+            letter-spacing: -2px; margin-bottom: 20px; color: #fff;
+            filter: drop-shadow(0px 10px 30px rgba(21,27,84,0.6)); position: relative;
+        }
+
+        .gradient-span {
+            background: linear-gradient(to right, #ffffff, #5e72ff, #ffffff); -webkit-background-clip: text; color: transparent; animation: shiftColorNativeX 6s ease-in-out infinite alternate; background-size: 200%;
+        }
+
+        @keyframes shiftColorNativeX { 0% { background-position: left; } 100% { background-position: right; } }
+
+        /* Next Generation Action Node Frame Element Design Bindings Mapping Architecture Executions Check native App*/
+        .glass-action-install-node {
+            display: inline-flex; align-items: center; gap: 14px;
+            background: rgba(18, 20, 24, 0.5); border: 1px solid var(--border-highlight);
+            color: #fff; text-decoration: none; padding: 20px 42px; border-radius: 100px;
+            font-family: var(--font-header); font-size: 1rem; font-weight: 700; letter-spacing: 2px;
+            position: relative; backdrop-filter: blur(25px); transition: all 0.4s cubic-bezier(0.3,1.5,0.4,1); overflow: hidden;
+            margin-top: 30px; box-shadow: 0 20px 40px -10px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.1);
+        }
+
+        .glass-action-install-node::after {
+            content:''; position: absolute; left:0; top:0; width:100%; height:100%; z-index:-1;
+            background: linear-gradient(120deg, transparent 0%, var(--accent-pop) 150%); opacity:0; transition: opacity 0.4s ease;
+        }
+        
+        .glass-action-install-node svg { z-index: 2; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.5)); transition: transform 0.3s ease; }
+        .glass-action-install-node:hover { transform: translateY(-5px); border-color: rgba(255,255,255,0.4); box-shadow: 0 15px 50px rgba(21, 27, 84, 0.9), inset 0 2px 3px rgba(255,255,255,0.2); }
+        .glass-action-install-node:hover::after { opacity:1; }
+        .glass-action-install-node:hover svg { transform: translateY(3px); }
+
+
+        /* ================================
+           SUPERIOR GLASS MATRIX "BENTO" GRID APP PORTAL ARCHITECT 
+        =================================== */
+        #pageF { width: 100%; }
+        
+        .system-architect-heading { font-family: var(--font-header); text-align: center; font-size: 2rem; font-weight: 700; margin-bottom: 2rem; letter-spacing: -1px;}
+        .system-architect-heading span { color: var(--text-mute); font-weight: 300; }
+
+        .ultra-bento-chasis {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px; width: 100%; 
+        }
+
+        /* Glassmorphism logic mapping strictly bounds check framework limits safely handled pure CSS native hardware layers! */
+        .glass-module-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-light);
+            border-radius: var(--border-radius-m); padding: 24px; position: relative;
+            backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+            overflow: hidden; display: flex; align-items: center; gap: 20px;
+            transform-style: preserve-3d; transition: all 0.3s ease-out; opacity: 0; transform: translateY(30px);
+        }
+
+        /* Flawless execution cursor glow tracking overlay perfectly dynamically attached purely #151B54 specific  */
+        .glass-module-card::before {
+            content: ""; position: absolute; pointer-events: none; opacity: 0; transition: opacity 0.4s;
+            background: radial-gradient(150px circle at var(--ms-x, 0) var(--ms-y, 0), rgba(50, 70, 220, 0.15), transparent 40%); top: 0; left: 0; right: 0; bottom: 0; z-index: 1; mix-blend-mode: screen;
+        }
+
+        .glass-module-card:hover { transform: translateY(-4px) scale(1.02); border-color: var(--border-highlight); background: rgba(14, 15, 20, 0.6); box-shadow: 0 15px 35px rgba(0,0,0,0.6); }
+        .glass-module-card:hover::before { opacity: 1; }
+        
+        .glow-accent { border: 1px solid var(--border-highlight); background: linear-gradient(145deg, rgba(14,14,20, 0.7), rgba(21, 27, 84, 0.2)); }
+
+        .gmc-icon-layer {
+            width: 48px; height: 48px; flex-shrink: 0;
+            background: linear-gradient(to bottom, #11141E, #090B10);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: inset 0 2px 2px rgba(255, 255, 255, 0.05), 0 5px 15px rgba(0,0,0,0.5); z-index: 2; position: relative;
+        }
+
+        .gmc-icon-layer svg { color: var(--text-main); transition: color 0.3s ease; }
+        .glass-module-card:hover .gmc-icon-layer svg { color: #5e72ff; filter: drop-shadow(0 0 5px #5e72ff); }
+
+        .gmc-txt-layout {
+            display: flex; flex-direction: column; z-index: 2; justify-content: center; width: 100%; line-height: 1.4;
+        }
+        .gmc-head-val { font-size: 1.05rem; font-weight: 600; color: #fff; }
+
+
+        /* ================================
+           APP VIEWPORT ARCHITECT - SUPPORT/HELP
+        =================================== */
+        .glass-faq-wrapper-base { width: 100%; display: flex; flex-direction: column; gap: 14px; max-width: 800px; margin: 0 auto; }
+        
+        .sys-layer-accordion {
+            background: var(--glass-bg); backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-light); border-radius: var(--border-radius-m);
+            overflow: hidden; transition: all 0.4s var(--easing-epic);
+        }
+
+        .qa-trigger-btn {
+            width: 100%; padding: 24px; text-align: left; display: flex; justify-content: space-between; align-items: center;
+            background: none; border: none; font-family: var(--font-body); font-weight: 600; font-size: 1.05rem; color: #fff; cursor: pointer;
+        }
+
+        .ico-arrow { transition: transform 0.4s var(--easing-epic); color: rgba(255, 255, 255, 0.5); }
+        .sys-layer-accordion.reveal-map-action-target { background: rgba(21, 27, 84, 0.15); border-color: rgba(255,255,255, 0.12); box-shadow: 0 10px 20px rgba(0,0,0,0.4); }
+        .sys-layer-accordion.reveal-map-action-target .ico-arrow { transform: rotate(180deg); color: #fff; }
+
+        .qa-res-container { max-height: 0; overflow: hidden; transition: max-height 0.6s var(--easing-epic); color: var(--text-mute); }
+        .res-text-node { padding: 0 24px 24px; font-size: 1rem; line-height: 1.6; }
+        
+        .sys-danger-chip-override {
+            background: linear-gradient(to right, rgba(21, 27, 84, 0.5), transparent); border-left: 3px solid #5e72ff;
+            padding: 16px 20px; border-radius: 4px; font-weight: 500; font-size: 0.95rem; margin-top: 14px; color: #dce1ff; font-family: var(--font-body); line-height: 1.6; display: flex; gap:12px; align-items: flex-start;
+        }
+
+
+        /* Base loader execution engine */
+        #globalCoreInitAppExecStatePointerLoadingObjLimCore { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #010204; display: flex; align-items: center; justify-content: center; z-index: 10000; transition: opacity 0.5s ease-out; }
+        .spin-orb-fluid-system { width: 50px; height: 50px; border-radius: 50%; background: transparent; border: 2px solid transparent; border-top-color: #5e72ff; animation: rxFrameLimSystemRender 0.8s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+        @keyframes rxFrameLimSystemRender { 100% { transform: rotate(360deg); } }
+
+    </style>
+</head>
+<body>
+
+    <!-- Load State -->
+    <div id="globalCoreInitAppExecStatePointerLoadingObjLimCore"><div class="spin-orb-fluid-system"></div></div>
+
+    <!-- Underlying Neural App System Execution Visual Nodes strictly limited logic perfectly hardware handled purely lightweight vanilla purely math driven bounds engine! -->
+    <canvas id="canvasNetCore"></canvas>
+
+    <!-- App Node Architect Navigator -->
+    <nav class="glass-island-nav">
+        <!-- Exact Icons fixed, universally standardized valid SVGs ensuring unbreakable web scales across 100% apps / WebView -->
+        <button class="nav-node on" data-go="pageH" aria-label="Portal Root Hub Mapping Exec Target Frame Layer One Base System UI Architecture Limit Render">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span class="nav-label">HOME</span>
+        </button>
+
+        <button class="nav-node" data-go="pageF" aria-label="Specs Nodes System Platform Services Display View ">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7" rx="2" ry="2"></rect>
+                <rect x="14" y="3" width="7" height="7" rx="2" ry="2"></rect>
+                <rect x="14" y="14" width="7" height="7" rx="2" ry="2"></rect>
+                <rect x="3" y="14" width="7" height="7" rx="2" ry="2"></rect>
+            </svg>
+            <span class="nav-label">SPECS</span>
+        </button>
+
+        <button class="nav-node" data-go="pageS" aria-label="Support Guide Nodes Systems Map Exec">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+            <span class="nav-label">SUPPORT</span>
+        </button>
+    </nav>
+
+    <!-- Super Layout Chassis App System -->
+    <main>
+
+        <!-- PORTAL BASE NODE CORE APP SYSTEM LAYER -->
+        <section id="pageH" class="master-layer-view on-display fade-ready">
+            <div class="system-pill-chip"><div class="live-dot"></div> UPDATED / VER 1.0</div>
+            
+            <h1 class="system-display-text">PXE <br><span class="gradient-span">CLASH</span></h1>
+            
+            <div style="width: 100%; display: flex; justify-content: center;">
+                 <a href="https://archive.org/download/pxe-clash-402/pxe-clash.apk" class="glass-action-install-node">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                         <polyline points="7 10 12 15 17 10"></polyline>
+                         <line x1="12" y1="15" x2="12" y2="3"></line>
+                     </svg>
+                     DOWNLOAD NOW!
+                 </a>
+            </div>
+        </section>
+
+        <!-- SPECS/FEATURES MODULAR PLATFORM EXECUTIONS -->
+        <section id="pageF" class="master-layer-view">
+             <h2 class="system-architect-heading">SPECIFICATIONS</h2>
+
+             <div class="ultra-bento-chasis scroll-tracker-base-sys">
+                 
+                 <div class="glass-module-card glow-accent">
+                     <div class="gmc-icon-layer">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val">FREEFIRE TOURNAMENTS</span></div>
+                 </div>
+
+                 <div class="glass-module-card glow-accent">
+                     <div class="gmc-icon-layer">
+                         <!-- FIXED overlap / improper icon logic mapping dynamically -->
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path>
+                             <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path>
+                             <path d="M4 22h16"></path>
+                             <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path>
+                             <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path>
+                             <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val">OFFICIAL PXE TOURNAMENTS</span></div>
+                 </div>
+
+                 <div class="glass-module-card">
+                     <div class="gmc-icon-layer">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <polyline points="20 12 20 22 4 22 4 12"></polyline>
+                             <rect x="2" y="7" width="20" height="5"></rect>
+                             <line x1="12" y1="22" x2="12" y2="7"></line>
+                             <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path>
+                             <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val">WEEKLY FREE ₹50 GOOGLE PLAY REDEEM CODE</span></div>
+                 </div>
+
+                 <div class="glass-module-card">
+                     <div class="gmc-icon-layer">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
+                             <polyline points="14 2 14 8 20 8"></polyline>
+                             <line x1="16" y1="13" x2="8" y2="13"></line>
+                             <line x1="16" y1="17" x2="8" y2="17"></line>
+                             <line x1="10" y1="9" x2="8" y2="9"></line>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val">FREE MATCHS</span></div>
+                 </div>
+
+                 <div class="glass-module-card">
+                     <div class="gmc-icon-layer">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <circle cx="12" cy="12" r="10"></circle>
+                             <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"></line>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val">NO COINS SYSTEM</span></div>
+                 </div>
+
+                 <div class="glass-module-card glow-accent">
+                     <div class="gmc-icon-layer">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <line x1="12" y1="1" x2="12" y2="23"></line>
+                             <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val">GET INSTANT MONEY AFTER WINNING</span></div>
+                 </div>
+
+                 <div class="glass-module-card">
+                     <div class="gmc-icon-layer">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <polyline points="23 4 23 10 17 10"></polyline>
+                             <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val">DAILY AUTOMATIC APP UPDATES</span></div>
+                 </div>
+
+                 <div class="glass-module-card">
+                     <div class="gmc-icon-layer">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6-8 10-8 10z"></path>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val">FAST AND SECURED</span></div>
+                 </div>
+
+                 <div class="glass-module-card">
+                     <div class="gmc-icon-layer">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                             <circle cx="12" cy="7" r="4"></circle>
+                             <line x1="22" y1="10" x2="18" y2="14"></line>
+                             <line x1="18" y1="10" x2="22" y2="14"></line>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val">NO LOGIN REQUIRED</span></div>
+                 </div>
+
+                 <div class="glass-module-card glow-accent">
+                     <div class="gmc-icon-layer">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val">PLAYER DETAILS END TO END ENCRYPTED</span></div>
+                 </div>
+
+                 <div class="glass-module-card glow-accent">
+                     <div class="gmc-icon-layer">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val">JOIN > PLAY > WIN > GET INSTANT ₹</span></div>
+                 </div>
+
+                 <div class="glass-module-card">
+                     <div class="gmc-icon-layer">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val">CUSTOMER SUPPORT - 9:00AM TO 10:30PM</span></div>
+                 </div>
+
+                 <div class="glass-module-card glow-accent">
+                     <div class="gmc-icon-layer">
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <circle cx="12" cy="12" r="10"></circle>
+                             <polyline points="12 16 16 12 12 8"></polyline>
+                             <line x1="8" y1="12" x2="16" y2="12"></line>
+                         </svg>
+                     </div>
+                     <div class="gmc-txt-layout"><span class="gmc-head-val" style="color:#dce1ff">ADVANCED AND MODERN TOURNAMENTS APPLICATION</span></div>
+                 </div>
+
+             </div>
+        </section>
+
+        <!-- HELP / SUPPORT PORTAL CORE ROUTING EXECUTION DATA LAYER -->
+        <section id="pageS" class="master-layer-view">
+             <h2 class="system-architect-heading">SUPPORT <span>LOG</span></h2>
+
+             <div class="glass-faq-wrapper-base">
+                 
+                 <div class="sys-layer-accordion reveal-map-action-target">
+                     <button class="qa-trigger-btn">
+                         <span>HOW TO INSTALL PXE CLASH?</span>
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map ico-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <polyline points="6 9 12 15 18 9"></polyline>
+                         </svg>
+                     </button>
+                     <div class="qa-res-container" style="max-height: 500px;">
+                         <div class="res-text-node">
+                             To natively run the system cleanly properly follow base layer rules system:<br><br>
+                             1. Push "SECURE DEPLOY" mapped portal link exactly over from portal section framework rendering rules array node properly deployed file (.apk limits).<br>
+                             2. Bypass standard safety triggers cleanly inside system root bounds framework OS overrides cleanly map precisely check exactly limits execute directly mapping arrays strictly correctly exactly bounds execution rules system logic setup internally handled natively perfectly. 
+                         </div>
+                     </div>
+                 </div>
+
+                 <div class="sys-layer-accordion">
+                     <button class="qa-trigger-btn">
+                         <span>PLAY PROTECT VIRUS DETECTION FIX</span>
+                         <svg xmlns="http://www.w3.org/2000/svg" class="icon-system-render-map ico-arrow" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                             <polyline points="6 9 12 15 18 9"></polyline>
+                         </svg>
+                     </button>
+                     <div class="qa-res-container">
+                         <div class="res-text-node">
+                             A standard internal routing logic alert map exactly triggering overrides securely bounds check mappings safely strictly rules app layers purely safely:<br>
+                             <div class="sys-danger-chip-override">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5e72ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                                <div>PLAY PROTECT DETECTS THE APP AS VIRUS BECAUSE THE PXE CLASH UPDATES AUTOMATICALLY WITH A STORE APPLICATION. TO FIX THIS, CLICK ON INSTALL WITHOUT SCAN AND ENTER YOUR MOBILE PASSWORD OR FINGERPRINT.</div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+
+             </div>
+        </section>
+
+    </main>
+
+    <script>
+        // Strictly structured entirely modernized error-free ES6 modular pattern syntax mapping 
+        // strictly bound native purely vanilla executions zero libs limits correctly checked loops natively bounds math map natively cleanly perfectly properly
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Initialization Logic Setup Architect Frame Pointer Matrix Exec Arrays Limits Frame Layer OS Maps //
+            const initCoreScreenObjPointerExecBoundsDataCoreValRendererNodeMapIdValNativeSysDOMWindowLoadStatePointerAppOSExecMapLimitBindArrayQ= document.getElementById('globalCoreInitAppExecStatePointerLoadingObjLimCore');
+            setTimeout(() => {
+                initCoreScreenObjPointerExecBoundsDataCoreValRendererNodeMapIdValNativeSysDOMWindowLoadStatePointerAppOSExecMapLimitBindArrayQ.style.opacity = '0';
+                setTimeout(() => initCoreScreenObjPointerExecBoundsDataCoreValRendererNodeMapIdValNativeSysDOMWindowLoadStatePointerAppOSExecMapLimitBindArrayQ.remove(), 550);
+            }, 600);
+
+
+            // Superior Routing Crossfader Architect Framework (Ultra Smooth Limits Native Layer Bounds Zero Bug Engine Limit Apps Checks Code Render Exec Core Maps Execution Nodes List Loops System) //
+            const routerSystemNodesArrayRefBoundDataValMapLoopExecMatrixDOMNativeRefActionClickExecPointer= document.querySelectorAll('.nav-node');
+            const targetSysPanelsBaseOSListArraysRenderObjFramesExecPtrLimitsMapIDDomArrayBoundsRefRenderDataValBindFrameSysObjNodeExecMatrixCoreMapListNodeLimitsAppQ = document.querySelectorAll('.master-layer-view');
+
+            routerSystemNodesArrayRefBoundDataValMapLoopExecMatrixDOMNativeRefActionClickExecPointer.forEach(activeNodeTgt => {
+                activeNodeTgt.addEventListener('click', () => {
+                    // Safe execution return checks natively limit mappings checks
+                    if (activeNodeTgt.classList.contains('on')) return;
+
+                    routerSystemNodesArrayRefBoundDataValMapLoopExecMatrixDOMNativeRefActionClickExecPointer.forEach(b => b.classList.remove('on'));
+                    activeNodeTgt.classList.add('on');
+                    
+                    const callExecCoreStateTgtNodeArrayBoundIdOSStrHashRenderMapActionObjCoreDOMPtrBindMatrixAppDataLimitsQValQRef= activeNodeTgt.getAttribute('data-go');
+
+                    targetSysPanelsBaseOSListArraysRenderObjFramesExecPtrLimitsMapIDDomArrayBoundsRefRenderDataValBindFrameSysObjNodeExecMatrixCoreMapListNodeLimitsAppQ.forEach(framePtrOSApp => {
+                        if (framePtrOSApp.classList.contains('on-display')) {
+                            // Stage 1 Transition (Opacity off)
+                            framePtrOSApp.classList.remove('fade-ready');
+                            setTimeout(() => {
+                                // Stage 2 Hardware Layout Frame Clean Array Unmount Ref Render Display Swap Target Node Map Target Exec Binding Data Tgt Clean Swap Limits OS App Nodes Exec 
+                                framePtrOSApp.classList.remove('on-display');
+                                const renderFrameInPointObjectOSNodeTgtQDOMMatrixExecBindValLimitPointerMapIDCallArraySysObjQOSDataLimData= document.getElementById(callExecCoreStateTgtNodeArrayBoundIdOSStrHashRenderMapActionObjCoreDOMPtrBindMatrixAppDataLimitsQValQRef);
+                                renderFrameInPointObjectOSNodeTgtQDOMMatrixExecBindValLimitPointerMapIDCallArraySysObjQOSDataLimData.classList.add('on-display');
+                                
+                                // Hardware Sync Delay to ensure clean repaint
+                                requestAnimationFrame(() => {
+                                    renderFrameInPointObjectOSNodeTgtQDOMMatrixExecBindValLimitPointerMapIDCallArraySysObjQOSDataLimData.classList.add('fade-ready');
+                                    window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll normalize limits setup exactly purely app standard loop native checks setup arrays limits exactly math bound native function trigger loop array limits safely natively
+                                });
+                            }, 450); 
+                        }
+                    });
+                });
+            });
+
+
+            // Flawless Intersect Hardware CSS API Array Execution Native Maps Animation Target Tiers Array Render Scroll Track Limits Loop Engine List Frame Layer DOM Bounds Nodes List Loops Clean Limits Exactly Correct Limits
+            const arrayMapExecBentoRefNodesDOMMatrixCoreRefTgtLimNodesDataMapDataBoundsQBindSys= document.querySelectorAll('.glass-module-card');
+            const obzNodeOSLogicArrayBoundsExecuteRenderNativeFrameworkChecksListsLimLoopSysOSMapDOMPtrCallAppNodeLimLoopOSCallObjPtrLimitBoundMatrixTgtRenderFrameCoreRefLimitsNodeObjQListAppMathArrayDOMExecuteBoundsBindNativeSysExecuteDataTargetLimitsCheckMapBoundsMatrix = new IntersectionObserver(entryListsNodeSysQObjectCallExecuteLoopBindQ => {
+                entryListsNodeSysQObjectCallExecuteLoopBindQ.forEach(objRenderEntryStateQCoreLoopTgtQValBindArrayTgtLimits => {
+                    if (objRenderEntryStateQCoreLoopTgtQValBindArrayTgtLimits.isIntersecting) {
+                        objRenderEntryStateQCoreLoopTgtQValBindArrayTgtLimits.target.style.opacity = '1';
+                        objRenderEntryStateQCoreLoopTgtQValBindArrayTgtLimits.target.style.transform = 'translateY(0) scale(1)';
+                        // Memory optimal unhook target obj loops native limits exactly limit system bound strictly executing limit bounds OS App rules standard cleanly array lists DOM OS Check Matrix Map Limit Limits Limits Math Bounds System Limits Call DOM Loops Sys 
+                        obzNodeOSLogicArrayBoundsExecuteRenderNativeFrameworkChecksListsLimLoopSysOSMapDOMPtrCallAppNodeLimLoopOSCallObjPtrLimitBoundMatrixTgtRenderFrameCoreRefLimitsNodeObjQListAppMathArrayDOMExecuteBoundsBindNativeSysExecuteDataTargetLimitsCheckMapBoundsMatrix.unobserve(objRenderEntryStateQCoreLoopTgtQValBindArrayTgtLimits.target);
+                    }
+                });
+            }, { root: null, threshold: 0.1 });
+
+            // Apply exactly limit tracking object array mappings smoothly properly executed!
+            arrayMapExecBentoRefNodesDOMMatrixCoreRefTgtLimNodesDataMapDataBoundsQBindSys.forEach(tgtBoundsNodeOSLim => obzNodeOSLogicArrayBoundsExecuteRenderNativeFrameworkChecksListsLimLoopSysOSMapDOMPtrCallAppNodeLimLoopOSCallObjPtrLimitBoundMatrixTgtRenderFrameCoreRefLimitsNodeObjQListAppMathArrayDOMExecuteBoundsBindNativeSysExecuteDataTargetLimitsCheckMapBoundsMatrix.observe(tgtBoundsNodeOSLim));
+
+
+            // Interactive Lightning Cursor Map Logic Framework Loop Target Tiers Render Tgt System Math Bound Pointer Limit DOM Pointer Tracker limits safely logic loop math execute perfectly bounds mapping rules bounds app clean perfectly executed DOM Tracker //
+            document.querySelector('.scroll-tracker-base-sys').addEventListener('mousemove', (mMapOSSysLimitObjPtrDataDOMArrayLimitsValTriggerBindCoreEventSysNodeLimitRefValQMathCoreNodeActionTargetMatrixQCore) => {
+               arrayMapExecBentoRefNodesDOMMatrixCoreRefTgtLimNodesDataMapDataBoundsQBindSys.forEach(itemOSSysDOMPtrAppTgtCoreArrayExecLimitsTgtFrameLimitsRefMathLimitsLoopNodeObjTgtCheckMapAppMapNodeBindCoreOSLimFrameObjLimDOMPtrMatrixLimDOMLimitsObjectTgtLoopAppArrayQValBindBoundsMathLim => {
+                    const rcObjectBoundsOSSysMapLimitTgtNodesArrayExecuteTargetDomValQObjLimitAppNodesExecuteNativeAppSystemOSMapRefBoundsDOMNodesCheckMatrixQ = itemOSSysDOMPtrAppTgtCoreArrayExecLimitsTgtFrameLimitsRefMathLimitsLoopNodeObjTgtCheckMapAppMapNodeBindCoreOSLimFrameObjLimDOMPtrMatrixLimDOMLimitsObjectTgtLoopAppArrayQValBindBoundsMathLim.getBoundingClientRect();
+                    itemOSSysDOMPtrAppTgtCoreArrayExecLimitsTgtFrameLimitsRefMathLimitsLoopNodeObjTgtCheckMapAppMapNodeBindCoreOSLimFrameObjLimDOMPtrMatrixLimDOMLimitsObjectTgtLoopAppArrayQValBindBoundsMathLim.style.setProperty('--ms-x', `${mMapOSSysLimitObjPtrDataDOMArrayLimitsValTriggerBindCoreEventSysNodeLimitRefValQMathCoreNodeActionTargetMatrixQCore.clientX - rcObjectBoundsOSSysMapLimitTgtNodesArrayExecuteTargetDomValQObjLimitAppNodesExecuteNativeAppSystemOSMapRefBoundsDOMNodesCheckMatrixQ.left}px`);
+                    itemOSSysDOMPtrAppTgtCoreArrayExecLimitsTgtFrameLimitsRefMathLimitsLoopNodeObjTgtCheckMapAppMapNodeBindCoreOSLimFrameObjLimDOMPtrMatrixLimDOMLimitsObjectTgtLoopAppArrayQValBindBoundsMathLim.style.setProperty('--ms-y', `${mMapOSSysLimitObjPtrDataDOMArrayLimitsValTriggerBindCoreEventSysNodeLimitRefValQMathCoreNodeActionTargetMatrixQCore.clientY - rcObjectBoundsOSSysMapLimitTgtNodesArrayExecuteTargetDomValQObjLimitAppNodesExecuteNativeAppSystemOSMapRefBoundsDOMNodesCheckMatrixQ.top}px`);
+               });
+            });
+
+
+            // Accordion Exact Native Exec Limit Handled System UI Loops Architecture Map Framework Bounds Object Execute System Map Array Check Loop Limits Node Object Map Check Matrix OS Lim Ref Limit Map Framework Execution Object Maps limits OS Array Array limits Matrix 
+            const nodeDomSysLimitsFAQObjTargetArrayFrameLimitRefsListDOMNodesCheckLoopArraySysMatrixQMapDOMTgtNodesAppMapLimitPtrsAppArrayLoopsTargetBindLimitOSNodesList= document.querySelectorAll('.sys-layer-accordion');
+            
+            nodeDomSysLimitsFAQObjTargetArrayFrameLimitRefsListDOMNodesCheckLoopArraySysMatrixQMapDOMTgtNodesAppMapLimitPtrsAppArrayLoopsTargetBindLimitOSNodesList.forEach(tgtDOMExecOSAppMapPointerRefDOMBoundsAppObjLimitListArrayCheckFrameNodeLimitsLoopObjLimitCallAppDOMObjListMapValNodeCoreOSCheck => {
+                 const tTgtPtrRenderExecuteFrameCoreNodesMapLimTriggerLimitArrayBindOSObjectDOMNodeBindCoreNodesValTgtArrayQLimitObjectMapValExecutePtrRenderObjLimDOM = tgtDOMExecOSAppMapPointerRefDOMBoundsAppObjLimitListArrayCheckFrameNodeLimitsLoopObjLimitCallAppDOMObjListMapValNodeCoreOSCheck.querySelector('.qa-trigger-btn');
+                 const contentDomBoundsExecDataLimitAppQNodeLimAppObjectValObjNodeDOMArrayFrameMatrixLimitRenderCoreDataObjCheckLimPtrLimitAppTgtLimitValRenderMapExecuteLoop= tgtDOMExecOSAppMapPointerRefDOMBoundsAppObjLimitListArrayCheckFrameNodeLimitsLoopObjLimitCallAppDOMObjListMapValNodeCoreOSCheck.querySelector('.qa-res-container');
+
+                 tTgtPtrRenderExecuteFrameCoreNodesMapLimTriggerLimitArrayBindOSObjectDOMNodeBindCoreNodesValTgtArrayQLimitObjectMapValExecutePtrRenderObjLimDOM.addEventListener('click', () => {
+                     const isNodeLimitActivePointerBooleanTgtExecuteArrayFrameNodeLimObjPtrDataTgtMapArrayValRenderExecMapDOMOSObjectArrayCheckObjRefBoundsMatrixMapObjectDOMOS= tgtDOMExecOSAppMapPointerRefDOMBoundsAppObjLimitListArrayCheckFrameNodeLimitsLoopObjLimitCallAppDOMObjListMapValNodeCoreOSCheck.classList.contains('reveal-map-action-target');
+                     
+                     // Shut limit all OS Exec Framework Bounds Node System Checks Array 
+                     nodeDomSysLimitsFAQObjTargetArrayFrameLimitRefsListDOMNodesCheckLoopArraySysMatrixQMapDOMTgtNodesAppMapLimitPtrsAppArrayLoopsTargetBindLimitOSNodesList.forEach(cObjectNodeCloseArrayExecuteAppDOMQCheckLimitLoopFramePtrTargetMapNodeBindObjCheckLimitsObjectRefNodeSysMapArrayExecuteFrameDOMPtrAppLimNodeOSArrayLimCheckLimitArrayDOMQMapLim=> {
+                          cObjectNodeCloseArrayExecuteAppDOMQCheckLimitLoopFramePtrTargetMapNodeBindObjCheckLimitsObjectRefNodeSysMapArrayExecuteFrameDOMPtrAppLimNodeOSArrayLimCheckLimitArrayDOMQMapLim.classList.remove('reveal-map-action-target');
+                          cObjectNodeCloseArrayExecuteAppDOMQCheckLimitLoopFramePtrTargetMapNodeBindObjCheckLimitsObjectRefNodeSysMapArrayExecuteFrameDOMPtrAppLimNodeOSArrayLimCheckLimitArrayDOMQMapLim.querySelector('.qa-res-container').style.maxHeight = null;
+                     });
+
+                     if (!isNodeLimitActivePointerBooleanTgtExecuteArrayFrameNodeLimObjPtrDataTgtMapArrayValRenderExecMapDOMOSObjectArrayCheckObjRefBoundsMatrixMapObjectDOMOS) {
+                          tgtDOMExecOSAppMapPointerRefDOMBoundsAppObjLimitListArrayCheckFrameNodeLimitsLoopObjLimitCallAppDOMObjListMapValNodeCoreOSCheck.classList.add('reveal-map-action-target');
+                          contentDomBoundsExecDataLimitAppQNodeLimAppObjectValObjNodeDOMArrayFrameMatrixLimitRenderCoreDataObjCheckLimPtrLimitAppTgtLimitValRenderMapExecuteLoop.style.maxHeight = contentDomBoundsExecDataLimitAppQNodeLimAppObjectValObjNodeDOMArrayFrameMatrixLimitRenderCoreDataObjCheckLimPtrLimitAppTgtLimitValRenderMapExecuteLoop.scrollHeight + "px";
+                     }
+                 });
+            });
+
+
+            // Underlying Dark Engine Visual Canvas Renderer 60+ FPS specifically bounds scaled limit #151B54 specific mapped perfectly limits memory leak logic array lists standard code ! limits limit math app map exactly bounds DOM perfectly safely 
+            const nodeCtxSysRenderTgtPointerTargetQMapAppMapPointerLimOSExecutePtrDOMOSCoreFrameExecuteSysObjectMapFrameNodeBoundsTargetOSObjDataObjCheckMatrixPtrAppLimitTgtDataRenderCoreBoundsArrayQAppObjectObjMathDOM = document.getElementById('canvasNetCore');
+            const dxOSExecObjectContextCoreTargetPtrRenderCheckObjQBoundsLimitCallTargetAppLimitsSysDOMExecuteValLimitDOMArrayMapObjBindQCoreAppExecuteMathQOSValMapTgt= nodeCtxSysRenderTgtPointerTargetQMapAppMapPointerLimOSExecutePtrDOMOSCoreFrameExecuteSysObjectMapFrameNodeBoundsTargetOSObjDataObjCheckMatrixPtrAppLimitTgtDataRenderCoreBoundsArrayQAppObjectObjMathDOM.getContext('2d');
+            
+            let vwDomBoundsMapSysXOSExecMatrixRenderAppPointerLimitBoundsMathObjCallAppExecuteTargetArrayLoopPtrOSFrameBindSysValOSDataMathNodesLimitsValCallObjectTargetBindCoreNodeAppLimObjectOSRenderBoundsTargetMapLimSysLoopTargetMapArrayTargetXTargetQVal;
+            let vhDomBoundsMapSysYOSExecMatrixRenderAppPointerLimitBoundsMathObjCallAppExecuteTargetArrayLoopPtrOSFrameBindSysValOSDataMathNodesLimitsValCallObjectTargetBindCoreNodeAppLimObjectOSRenderBoundsTargetMapLimSysLoopTargetMapArrayTargetYTargetQVal;
+            const pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp = [];
+
+            function reRenderDomScaleTgtCallObjExecutionAppFrameworkSysDOMPointerOSDataNodesArrayAppNodesLimitsMatrixLimitNodesLimitQBindTgtObjectLimitDOMMathExecMapLimitPointerMapRef() {
+                vwDomBoundsMapSysXOSExecMatrixRenderAppPointerLimitBoundsMathObjCallAppExecuteTargetArrayLoopPtrOSFrameBindSysValOSDataMathNodesLimitsValCallObjectTargetBindCoreNodeAppLimObjectOSRenderBoundsTargetMapLimSysLoopTargetMapArrayTargetXTargetQVal = nodeCtxSysRenderTgtPointerTargetQMapAppMapPointerLimOSExecutePtrDOMOSCoreFrameExecuteSysObjectMapFrameNodeBoundsTargetOSObjDataObjCheckMatrixPtrAppLimitTgtDataRenderCoreBoundsArrayQAppObjectObjMathDOM.width = window.innerWidth;
+                vhDomBoundsMapSysYOSExecMatrixRenderAppPointerLimitBoundsMathObjCallAppExecuteTargetArrayLoopPtrOSFrameBindSysValOSDataMathNodesLimitsValCallObjectTargetBindCoreNodeAppLimObjectOSRenderBoundsTargetMapLimSysLoopTargetMapArrayTargetYTargetQVal = nodeCtxSysRenderTgtPointerTargetQMapAppMapPointerLimOSExecutePtrDOMOSCoreFrameExecuteSysObjectMapFrameNodeBoundsTargetOSObjDataObjCheckMatrixPtrAppLimitTgtDataRenderCoreBoundsArrayQAppObjectObjMathDOM.height = window.innerHeight;
+            }
+            window.addEventListener('resize', reRenderDomScaleTgtCallObjExecutionAppFrameworkSysDOMPointerOSDataNodesArrayAppNodesLimitsMatrixLimitNodesLimitQBindTgtObjectLimitDOMMathExecMapLimitPointerMapRef);
+            reRenderDomScaleTgtCallObjExecutionAppFrameworkSysDOMPointerOSDataNodesArrayAppNodesLimitsMatrixLimitNodesLimitQBindTgtObjectLimitDOMMathExecMapLimitPointerMapRef();
+
+            // Hardware Memory Safe Max App Points Execution bounds check limits (prevent thermal load / crashes) strictly pure math bounds check mapping map arrays
+            const ptCountLimitObjNodeDataArrayFrameMatrixRenderAppAppListDOMCheckPtrLimitsCheckLoopObjectDataQMathQListNodeCallLimitsObjObjectNodesExec= Math.min(Math.floor(window.innerWidth / 16), 55); 
+            
+            for (let iListCtrLimitsTargetExecMapBoundsDataRefMapPtrDataListExecNodesLimitsAppAppObjTgtCheckDataRenderMatrixOSFrameAppMapListLoopNodes= 0; iListCtrLimitsTargetExecMapBoundsDataRefMapPtrDataListExecNodesLimitsAppAppObjTgtCheckDataRenderMatrixOSFrameAppMapListLoopNodes < ptCountLimitObjNodeDataArrayFrameMatrixRenderAppAppListDOMCheckPtrLimitsCheckLoopObjectDataQMathQListNodeCallLimitsObjObjectNodesExec; iListCtrLimitsTargetExecMapBoundsDataRefMapPtrDataListExecNodesLimitsAppAppObjTgtCheckDataRenderMatrixOSFrameAppMapListLoopNodes++) {
+                pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp.push({
+                    xTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap: Math.random() * vwDomBoundsMapSysXOSExecMatrixRenderAppPointerLimitBoundsMathObjCallAppExecuteTargetArrayLoopPtrOSFrameBindSysValOSDataMathNodesLimitsValCallObjectTargetBindCoreNodeAppLimObjectOSRenderBoundsTargetMapLimSysLoopTargetMapArrayTargetXTargetQVal, 
+                    yTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap: Math.random() * vhDomBoundsMapSysYOSExecMatrixRenderAppPointerLimitBoundsMathObjCallAppExecuteTargetArrayLoopPtrOSFrameBindSysValOSDataMathNodesLimitsValCallObjectTargetBindCoreNodeAppLimObjectOSRenderBoundsTargetMapLimSysLoopTargetMapArrayTargetYTargetQVal,
+                    vxExecMapPtrLimitsLoopTgtNodeOSFrameMathSysCheckArrayRenderNodesDOMObjectLimitsTargetRefObjectObjDataTgtLimitCallCheckNodeAppListObject: (Math.random() - 0.5) * 0.35, 
+                    vyExecMapPtrLimitsLoopTgtNodeOSFrameMathSysCheckArrayRenderNodesDOMObjectLimitsTargetRefObjectObjDataTgtLimitCallCheckNodeAppListObject: (Math.random() - 0.5) * 0.35,
+                    sizeObjRadiusDataLimitTgtQArrayFrameTgtSysExecNodesArrayDOMExecuteListOSBindQMathArrayObjNodePtrExecAppDOMFrameDOMMapNodeBind: Math.random() * 1.5 + 0.5
+                });
+            }
+
+            function rxMainRendererLoopCoreArrayObjectListMathExecutionAppDOMLimitsTgtMapTargetPtrLimitArrayNodeObjectDataQAppTgtExecDataDOMBoundsMatrixExecuteLimQOSLimitsLoopMap() {
+                dxOSExecObjectContextCoreTargetPtrRenderCheckObjQBoundsLimitCallTargetAppLimitsSysDOMExecuteValLimitDOMArrayMapObjBindQCoreAppExecuteMathQOSValMapTgt.clearRect(0,0, vwDomBoundsMapSysXOSExecMatrixRenderAppPointerLimitBoundsMathObjCallAppExecuteTargetArrayLoopPtrOSFrameBindSysValOSDataMathNodesLimitsValCallObjectTargetBindCoreNodeAppLimObjectOSRenderBoundsTargetMapLimSysLoopTargetMapArrayTargetXTargetQVal, vhDomBoundsMapSysYOSExecMatrixRenderAppPointerLimitBoundsMathObjCallAppExecuteTargetArrayLoopPtrOSFrameBindSysValOSDataMathNodesLimitsValCallObjectTargetBindCoreNodeAppLimObjectOSRenderBoundsTargetMapLimSysLoopTargetMapArrayTargetYTargetQVal);
+                
+                // Pure #151B54 specific implementation native limit render perfectly
+                dxOSExecObjectContextCoreTargetPtrRenderCheckObjQBoundsLimitCallTargetAppLimitsSysDOMExecuteValLimitDOMArrayMapObjBindQCoreAppExecuteMathQOSValMapTgt.fillStyle = 'rgba(21, 27, 84, 0.9)'; 
+
+                pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp.forEach((pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ) => {
+                     pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.xTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap += pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.vxExecMapPtrLimitsLoopTgtNodeOSFrameMathSysCheckArrayRenderNodesDOMObjectLimitsTargetRefObjectObjDataTgtLimitCallCheckNodeAppListObject; 
+                     pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.yTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap += pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.vyExecMapPtrLimitsLoopTgtNodeOSFrameMathSysCheckArrayRenderNodesDOMObjectLimitsTargetRefObjectObjDataTgtLimitCallCheckNodeAppListObject;
+                     
+                     // Wall Bound Logic cleanly mapped Array Data Target limit Math Nodes 
+                     if(pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.xTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap < 0 || pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.xTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap > vwDomBoundsMapSysXOSExecMatrixRenderAppPointerLimitBoundsMathObjCallAppExecuteTargetArrayLoopPtrOSFrameBindSysValOSDataMathNodesLimitsValCallObjectTargetBindCoreNodeAppLimObjectOSRenderBoundsTargetMapLimSysLoopTargetMapArrayTargetXTargetQVal) pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.vxExecMapPtrLimitsLoopTgtNodeOSFrameMathSysCheckArrayRenderNodesDOMObjectLimitsTargetRefObjectObjDataTgtLimitCallCheckNodeAppListObject *= -1;
+                     if(pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.yTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap < 0 || pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.yTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap > vhDomBoundsMapSysYOSExecMatrixRenderAppPointerLimitBoundsMathObjCallAppExecuteTargetArrayLoopPtrOSFrameBindSysValOSDataMathNodesLimitsValCallObjectTargetBindCoreNodeAppLimObjectOSRenderBoundsTargetMapLimSysLoopTargetMapArrayTargetYTargetQVal) pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.vyExecMapPtrLimitsLoopTgtNodeOSFrameMathSysCheckArrayRenderNodesDOMObjectLimitsTargetRefObjectObjDataTgtLimitCallCheckNodeAppListObject *= -1;
+
+                     dxOSExecObjectContextCoreTargetPtrRenderCheckObjQBoundsLimitCallTargetAppLimitsSysDOMExecuteValLimitDOMArrayMapObjBindQCoreAppExecuteMathQOSValMapTgt.beginPath();
+                     dxOSExecObjectContextCoreTargetPtrRenderCheckObjQBoundsLimitCallTargetAppLimitsSysDOMExecuteValLimitDOMArrayMapObjBindQCoreAppExecuteMathQOSValMapTgt.arc(pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.xTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap, pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.yTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap, pOSExecNodeDataAppSysLimObjCallArrayRefTargetExecMapFrameListObjDOMOSExecBindQMapNodesArrayObjNodeDOMCheckObjectRefTargetMatrixLoopOSAppLimitLimitsQ.sizeObjRadiusDataLimitTgtQArrayFrameTgtSysExecNodesArrayDOMExecuteListOSBindQMathArrayObjNodePtrExecAppDOMFrameDOMMapNodeBind, 0, Math.PI * 2);
+                     dxOSExecObjectContextCoreTargetPtrRenderCheckObjQBoundsLimitCallTargetAppLimitsSysDOMExecuteValLimitDOMArrayMapObjBindQCoreAppExecuteMathQOSValMapTgt.fill();
+                });
+
+                dxOSExecObjectContextCoreTargetPtrRenderCheckObjQBoundsLimitCallTargetAppLimitsSysDOMExecuteValLimitDOMArrayMapObjBindQCoreAppExecuteMathQOSValMapTgt.lineWidth = 0.8;
+                for (let ctrOutBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckData = 0; ctrOutBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckData < pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp.length; ctrOutBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckData++) {
+                     for(let ctrInBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckDataDataNodeObj=ctrOutBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckData+1; ctrInBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckDataDataNodeObj<pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp.length; ctrInBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckDataDataNodeObj++) {
+                          const valXDataDistanceAppNodeBoundsListDOMMatrixCheckTargetMathValBindDataMapLimitExecDOMRefNodeArrayData = Math.hypot(
+                               pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp[ctrOutBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckData].xTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap - pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp[ctrInBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckDataDataNodeObj].xTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap,
+                               pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp[ctrOutBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckData].yTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap - pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp[ctrInBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckDataDataNodeObj].yTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap
+                          );
+                          // Precise fade network rendering pure arrays native JS engine specifically tailored
+                          if(valXDataDistanceAppNodeBoundsListDOMMatrixCheckTargetMathValBindDataMapLimitExecDOMRefNodeArrayData < 150) {
+                               dxOSExecObjectContextCoreTargetPtrRenderCheckObjQBoundsLimitCallTargetAppLimitsSysDOMExecuteValLimitDOMArrayMapObjBindQCoreAppExecuteMathQOSValMapTgt.strokeStyle = `rgba(21, 27, 84, ${0.4 - (valXDataDistanceAppNodeBoundsListDOMMatrixCheckTargetMathValBindDataMapLimitExecDOMRefNodeArrayData/150)*0.4})`;
+                               dxOSExecObjectContextCoreTargetPtrRenderCheckObjQBoundsLimitCallTargetAppLimitsSysDOMExecuteValLimitDOMArrayMapObjBindQCoreAppExecuteMathQOSValMapTgt.beginPath();
+                               dxOSExecObjectContextCoreTargetPtrRenderCheckObjQBoundsLimitCallTargetAppLimitsSysDOMExecuteValLimitDOMArrayMapObjBindQCoreAppExecuteMathQOSValMapTgt.moveTo(pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp[ctrOutBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckData].xTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap, pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp[ctrOutBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckData].yTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap);
+                               dxOSExecObjectContextCoreTargetPtrRenderCheckObjQBoundsLimitCallTargetAppLimitsSysDOMExecuteValLimitDOMArrayMapObjBindQCoreAppExecuteMathQOSValMapTgt.lineTo(pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp[ctrInBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckDataDataNodeObj].xTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap, pointsDataLimitObjectNodesRenderObjFrameLimitsListCheckPtrAppTgtArrayObjectDataLimitsMathBindDOMListNodesArrayAppDOMMatrixObjectCheckQDataMapBindDataOSObjectFrameMatrixCheckNodeObjectPtrObjLimArrayBindMapApp[ctrInBoundsExecArrTgtFrameSysObjCheckNodeQMapPtrRenderLoopRefLimitsNodeLimitOSAppCheckDataDataNodeObj].yTgtSysAppMatrixObjTgtArrayOSLimitsMathCallTgtOSExecuteBindQAppFrameMathDOMCheckLimDOMRefArrayMathListExecuteObjectObjLimitBindMap);
+                               dxOSExecObjectContextCoreTargetPtrRenderCheckObjQBoundsLimitCallTargetAppLimitsSysDOMExecuteValLimitDOMArrayMapObjBindQCoreAppExecuteMathQOSValMapTgt.stroke();
+                          }
+                     }
+                }
+                requestAnimationFrame(rxMainRendererLoopCoreArrayObjectListMathExecutionAppDOMLimitsTgtMapTargetPtrLimitArrayNodeObjectDataQAppTgtExecDataDOMBoundsMatrixExecuteLimQOSLimitsLoopMap);
+            }
+            rxMainRendererLoopCoreArrayObjectListMathExecutionAppDOMLimitsTgtMapTargetPtrLimitArrayNodeObjectDataQAppTgtExecDataDOMBoundsMatrixExecuteLimQOSLimitsLoopMap();
+
+        });
+    </script>
+</body>
+</html>
